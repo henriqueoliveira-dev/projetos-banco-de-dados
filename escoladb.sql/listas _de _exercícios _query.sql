@@ -1,140 +1,61 @@
 USE escoladb;
-SELECT * FROM alunos;
 
-#Lista de exercícios — EscolaDB
-#Questão 1 — SELECT + WHERE
-
-#Consulte todos os alunos cadastrados que possuem um CPF preenchido.
-
-#Exiba:
-#- id_aluno
-#- nome
-#- cpf
-
-#Solução
+-- Questão 1 — SELECT + WHERE
+-- Liste alunos com CPF preenchido.
 SELECT id_aluno, nome, cpf
 FROM alunos
 WHERE cpf IS NOT NULL;
 
-#Próximo desafio — Questão 2
-#Consulte todos os professores cadastrados, exibindo:
-#- Nome;
-#- Especialidade;
-#- Salário.
-#Ordene os resultados pelo salário, do maior para o menor.
-
-#Slução
+-- Questão 2 — ORDER BY
+-- Liste professores, da maior para a menor remuneração.
 SELECT nome, especialidade, salario
 FROM professores
-ORDER BY  salario DESC;
+ORDER BY salario DESC;
 
-/*
-Questão 3 — COUNT + WHERE
-Agora vamos trabalhar com uma função de agregação.
-
-Desafio: conte quantos alunos estão cadastrados na tabela alunos.
-
-O resultado deve apresentar o nome da coluna como total_alunos.
-
-Soloção
-*/
-
-SELECT COUNT(*) as total_alunos
+-- Questão 3 — COUNT + WHERE
+-- Conte os alunos cadastrados.
+SELECT COUNT(*) AS total_alunos
 FROM alunos;
 
-/*
-Questão 4 — INNER JOIN
-Novo desafio
-Faça uma consulta que apresente:
-- Nome do aluno.
-- Nome da turma em que está matriculado.
-Você precisará utilizar três tabelas:
-1. alunos
-2. matriculas
-3. turmas
+-- Questão 4 — INNER JOIN
+-- Liste cada aluno e o nome da turma em que está matriculado.
+SELECT a.nome AS nome_aluno, t.nome_turma
+FROM alunos AS a
+INNER JOIN matriculas AS m
+    ON m.id_aluno = a.id_aluno
+INNER JOIN turmas AS t
+    ON t.id_turma = m.id_turma
+ORDER BY t.nome_turma, a.nome;
 
-Solução
-*/
- 
- SELECT * FROM matriculas;
- SELECT * FROM turmas;
+-- Questão 5 — Disciplinas e professores
+-- Liste as disciplinas e os professores associados em cada turma.
+SELECT d.nome_disciplina, p.nome AS nome_professor
+FROM disciplinas AS d
+INNER JOIN turma_disciplina AS td
+    ON td.id_disciplina = d.id_disciplina
+INNER JOIN professores AS p
+    ON p.id_professor = td.id_professor
+ORDER BY d.nome_disciplina, p.nome;
 
-SELECT alunos.nome, turmas.nome_turma
-FROM alunos
-INNER JOIN matriculas
-    ON alunos.id_aluno = matriculas.id_aluno
-INNER JOIN turmas
-    ON matriculas.id_turma = turmas.id_turma;
+-- Questão 6 — GROUP BY + COUNT
+-- Conte os alunos distintos matriculados em cada turma.
+SELECT t.nome_turma, COUNT(DISTINCT m.id_aluno) AS total_alunos
+FROM turmas AS t
+INNER JOIN matriculas AS m
+    ON m.id_turma = t.id_turma
+GROUP BY t.id_turma, t.nome_turma
+ORDER BY t.nome_turma;
 
-/*
-Questão 5 — Disciplinas e professores
-Objetivo: listar o nome de cada disciplina e o nome do professor responsável por ela.
-
-Você deverá utilizar três tabelas:
-- disciplinas
-- turma_disciplina
-- professores
-
-Solução
-*/
-
-SELECT * FROM disciplinas;
-SELECT * FROM professores;
-SELECT * FROM turmas;
-
-DESCRIBE turma_disciplina;
-DESCRIBE disciplinas;
-DESCRIBE professores;
-
-SELECT disciplinas.nome_disciplina, professores.nome
-FROM disciplinas
-INNER JOIN turma_disciplina
-    ON disciplinas.id_disciplina = turma_disciplina.id_disciplina
-INNER JOIN professores
-    ON turma_disciplina.id_professor = professores.id_professor;
-
-/*
-Questão 6 — GROUP BY + COUNT()
-(Nível médio)
-
-Objetivo: descobrir quantos alunos estão matriculados em cada turma.
-
-Você deverá utilizar três comandos principais:
-- SELECT → selecionar o nome da turma e contar os alunos.
-- COUNT() → contar a quantidade de matrículas.
-- GROUP BY → agrupar os resultados por turma.
-Resultado esperado (exemplo ilustrativo)
-*/
-SELECT * FROM matricula;
-
-
-SELECT turmas.nome_turma, COUNT(*) AS total_alunos
-FROM matriculas
-INNER JOIN turmas
-    ON matriculas.id_turma = turmas.id_turma
-GROUP BY turmas.nome_turma;  
-
-/*
-Questão 7 — GROUP BY + AVG()
-Nível médio
-Objetivo: calcular a média das notas dos alunos por disciplina.
-
-Você deverá utilizar quatro tabelas:
-- notas
-- matricula_disciplina
-- turma_disciplina
-- disciplinas
-*/
-
-SELECT * FROM notas;
-
-
-SELECT disciplinas AVG()
-FROM
-INNER JOIN
-
- 
-
-
-
-
+-- Questão 7 — GROUP BY + AVG
+-- Calcule a média das notas por disciplina.
+SELECT d.nome_disciplina, ROUND(AVG(n.nota), 2) AS media_notas
+FROM notas AS n
+INNER JOIN matricula_disciplina AS md
+    ON md.id_matricula_disciplina = n.id_matricula_disciplina
+INNER JOIN turma_disciplina AS td
+    ON td.id_turma_disciplina = md.id_turma_disciplina
+   AND td.id_turma = md.id_turma
+INNER JOIN disciplinas AS d
+    ON d.id_disciplina = td.id_disciplina
+GROUP BY d.id_disciplina, d.nome_disciplina
+ORDER BY d.nome_disciplina;

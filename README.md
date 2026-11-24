@@ -1,152 +1,105 @@
-# 🏫 EscolaDB — Sistema de Gerenciamento Escolar
+# EscolaDB — Sistema de Gerenciamento Escolar
 
-![MySQL](https://img.shields.io/badge/MySQL-8.4.9-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
-![Database](https://img.shields.io/badge/Database-Relational-blue?style=for-the-badge)
-![Status](https://img.shields.io/badge/Status-Em%20desenvolvimento-orange?style=for-the-badge)
+## Sobre o projeto
 
-## 📌 Sobre o projeto
+O **EscolaDB** é um projeto educacional de banco de dados relacional em MySQL, destinado a modelar informações acadêmicas, administrativas e financeiras de uma instituição de ensino. O esquema contempla alunos, responsáveis, professores, funcionários, turmas, disciplinas, matrículas, notas, frequências e pagamentos.
 
-O **EscolaDB** é um projeto de banco de dados relacional desenvolvido com MySQL, com o objetivo de estruturar e organizar informações de uma instituição de ensino.
-
-O banco foi projetado para representar diferentes áreas do ambiente escolar, incluindo alunos, responsáveis, professores, funcionários, turmas, disciplinas, matrículas, notas, frequências e controle financeiro.
-
-O projeto tem como finalidade aplicar conceitos de modelagem de dados, integridade referencial e consultas SQL, simulando a estrutura de dados de um sistema de gerenciamento escolar.
-
-## 🎯 Objetivos
-
-- Desenvolver uma estrutura de banco de dados relacional.
-- Organizar informações acadêmicas e administrativas.
-- Implementar relacionamentos entre diferentes entidades.
-- Aplicar chaves primárias e estrangeiras.
-- Utilizar restrições para garantir a integridade dos dados.
-- Desenvolver consultas SQL para extração e análise de informações.
-
-## 🛠️ Tecnologias utilizadas
+## Tecnologias
 
 | Tecnologia | Utilização |
 |---|---|
-| MySQL 8.4.9 | Sistema gerenciador de banco de dados |
-| MySQL Workbench | Administração e execução de consultas SQL |
-| SQL | Criação, manipulação e consulta de dados |
-| Git / GitHub | Versionamento e documentação do projeto |
+| MySQL 8.4.9 | Sistema gerenciador de banco de dados usado no projeto |
+| MySQL Workbench | Administração e execução de consultas |
+| SQL | Definição do esquema, dados de exemplo e consultas |
+| Git / GitHub | Versionamento e documentação |
 
-## 🗂️ Estrutura do banco de dados
+## Estrutura do banco de dados
 
-O EscolaDB possui **15 tabelas**, organizadas para representar diferentes áreas de uma instituição escolar.
+O esquema contém **15 tabelas**, **81 colunas** e **14 chaves estrangeiras**.
 
-### 1. Pessoas e relacionamentos
+### Pessoas e relacionamentos
 
 | Tabela | Descrição |
 |---|---|
 | `alunos` | Cadastro dos alunos |
 | `responsaveis` | Cadastro dos responsáveis |
-| `aluno_responsavel` | Relacionamento entre alunos e responsáveis |
+| `aluno_responsavel` | Associação entre alunos e responsáveis |
 | `professores` | Cadastro dos professores |
 | `funcionarios` | Cadastro dos funcionários |
 
-### 2. Estrutura acadêmica
+### Estrutura acadêmica
 
 | Tabela | Descrição |
 |---|---|
-| `anos_letivos` | Organização dos anos letivos |
-| `turmas` | Cadastro das turmas |
-| `disciplinas` | Cadastro das disciplinas |
-| `turma_disciplina` | Associação entre turmas, disciplinas e professores |
+| `anos_letivos` | Anos letivos |
+| `turmas` | Turmas vinculadas a um ano letivo |
+| `disciplinas` | Disciplinas oferecidas |
+| `turma_disciplina` | Associação entre turma, disciplina e professor |
 
-### 3. Matrículas e aprendizagem
-
-| Tabela | Descrição |
-|---|---|
-| `matriculas` | Registro das matrículas dos alunos |
-| `matricula_disciplina` | Associação das matrículas às disciplinas |
-| `notas` | Registro das avaliações e notas |
-| `frequencias` | Controle de presença e faltas |
-
-### 4. Financeiro
+### Matrículas e aprendizagem
 
 | Tabela | Descrição |
 |---|---|
-| `mensalidades` | Controle das mensalidades |
-| `pagamentos` | Registro dos pagamentos realizados |
+| `matriculas` | Matrículas de alunos em turmas |
+| `matricula_disciplina` | Disciplinas associadas a cada matrícula |
+| `notas` | Avaliações e notas |
+| `frequencias` | Presença e faltas por aula |
 
-## 🔗 Modelo relacional
+### Financeiro
 
-O banco utiliza relacionamentos entre entidades por meio de chaves primárias (PK) e chaves estrangeiras (FK).
-
-O modelo contempla relacionamentos de um para muitos (1:N) e muitos para muitos (N:N), utilizando tabelas associativas quando necessário.
-
-O relacionamento entre alunos e responsáveis, por exemplo, é representado pela tabela `aluno_responsavel`.
-
-A associação entre turmas, disciplinas e professores é realizada pela tabela `turma_disciplina`.
-
-### Diagrama entidade-relacionamento (DER)
-
-O diagrama apresenta a estrutura das tabelas e seus relacionamentos.
-
-**Arquivo:** `docs/EscolaDB_Diagrama_ER.png`
-
-> Após adicionar o arquivo à pasta `docs`, ele poderá ser exibido aqui:
-
-![Diagrama ER do EscolaDB](docs/EscolaDB_Diagrama_ER.png)
-
-## ⚙️ Recursos SQL aplicados
-
-Durante o desenvolvimento e os exercícios do projeto, foram trabalhados os seguintes recursos:
-
-- `CREATE DATABASE` e `CREATE TABLE`
-- `ALTER TABLE`
-- `PRIMARY KEY`
-- `FOREIGN KEY`
-- `UNIQUE`
-- `CHECK`
-- `DEFAULT`
-- `INSERT INTO`
-- `SELECT`
-- `WHERE`
-- `ORDER BY`
-- `INNER JOIN`
-- `COUNT()`
-- `SUM()`
-- `AVG()`
-- `GROUP BY`
-- `HAVING`
-- `ROUND()`
-
-## 🛡️ Integridade e organização dos dados
-
-O projeto utiliza mecanismos de integridade do MySQL, incluindo:
-
-- Chaves primárias para identificação dos registros.
-- Chaves estrangeiras para estabelecer relacionamentos.
-- Restrições `UNIQUE` para evitar duplicidade em campos específicos.
-- Restrições `CHECK` para validação de valores.
-- Engine InnoDB para suporte a transações e integridade referencial.
-
-## 📊 Informações técnicas
-
-| Característica | Informação |
+| Tabela | Descrição |
 |---|---|
-| Nome do banco | EscolaDB |
-| SGBD | MySQL |
-| Versão utilizada | 8.4.9 |
-| Quantidade de tabelas | 15 |
-| Quantidade de colunas | 81 |
-| Referências de chaves estrangeiras | 16 |
+| `mensalidades` | Mensalidades vinculadas às matrículas |
+| `pagamentos` | Pagamentos associados às mensalidades |
 
-## 🚀 Próximas etapas
+O modelo utiliza chaves primárias e estrangeiras, restrições `UNIQUE` e `CHECK`, tabelas associativas para relações muitos-para-muitos e o mecanismo InnoDB.
 
-- [ ] Finalizar a documentação técnica do banco.
-- [ ] Organizar os scripts SQL de criação das tabelas.
-- [ ] Documentar os dados de teste.
-- [ ] Ampliar a coleção de consultas SQL.
-- [ ] Desenvolver consultas para relatórios acadêmicos e financeiros.
-- [ ] Continuar aprimorando o modelo relacional.
+## Scripts e carga do banco
 
-## 📚 Finalidade educacional
+Os scripts de criação e carga estão separados por tabela em `escoladb.sql/`. Eles incluem comandos `DROP TABLE IF EXISTS` e substituem as tabelas correspondentes ao serem executados. **Faça backup antes de executar em um banco com dados que deseja preservar.**
 
-Este projeto foi desenvolvido com finalidade educacional, como parte do processo de estudo e prática de banco de dados relacionais e linguagem SQL.
+Crie o banco uma vez:
 
----
+```sql
+CREATE DATABASE escoladb
+  CHARACTER SET utf8mb4
+  COLLATE utf8mb4_0900_ai_ci;
+```
 
-**EscolaDB** — Projeto de banco de dados relacional desenvolvido com MySQL.
+Em seguida, no Bash, execute os arquivos nesta ordem, que respeita as dependências de chaves estrangeiras. O comando solicita a senha do usuário MySQL:
 
+```bash
+for arquivo in \
+  escoladb.sql/escoladb_alunos.sql \
+  escoladb.sql/escoladb_responsaveis.sql \
+  escoladb.sql/escoladb_professores.sql \
+  escoladb.sql/escoladb_funcionarios.sql \
+  escoladb.sql/escoladb_anos_letivos.sql \
+  escoladb.sql/escoladb_disciplinas.sql \
+  escoladb.sql/escoladb_turmas.sql \
+  escoladb.sql/escoladb_aluno_responsavel.sql \
+  escoladb.sql/escoladb_matriculas.sql \
+  escoladb.sql/escoladb_turma_disciplina.sql \
+  escoladb.sql/escoladb_mensalidades.sql \
+  escoladb.sql/escoladb_matricula_disciplina.sql \
+  escoladb.sql/escoladb_pagamentos.sql \
+  escoladb.sql/escoladb_frequencias.sql \
+  escoladb.sql/escoladb_notas.sql
+do
+  mysql -u seu_usuario -p escoladb < "$arquivo" || exit 1
+done
+```
+
+O arquivo `escoladb.sql/listas _de _exercícios _query.sql` contém consultas didáticas para executar depois da carga. Os scripts SQL pressupõem MySQL compatível com a collation `utf8mb4_0900_ai_ci` usada pelo MySQL 8.
+
+## Recursos SQL demonstrados
+
+`CREATE TABLE`, `PRIMARY KEY`, `FOREIGN KEY`, `UNIQUE`, `CHECK`, `DEFAULT`, `INSERT`, `SELECT`, `WHERE`, `ORDER BY`, `JOIN`, `COUNT`, `AVG`, `GROUP BY`, `HAVING` e `ROUND`.
+
+## Dados e privacidade
+
+Os scripts incluem registros de exemplo com dados pessoais e informações de contato/salário. Não é possível confirmar apenas pelo repositório que todos os valores são fictícios. Antes de compartilhar ou publicar os scripts, confirme a origem dos dados e substitua ou anonimize qualquer informação real; não use esses registros como dados de produção.
+
+## Finalidade educacional
+
+Este projeto foi desenvolvido para praticar modelagem relacional, integridade referencial e consultas SQL. Não deve ser tratado como sistema pronto para uso em produção.
