@@ -1,0 +1,127 @@
+name: MySQL Database CI
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'README.md'
+      - 'escoladb.sql/**'
+      - 'Comercio_db/comercio_db.sql/**'
+      - '.github/workflows/mysql-validation.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'README.md'
+      - 'escoladb.sql/**'
+      - 'Comercio_db/comercio_db.sql/**'
+      - '.github/workflows/mysql-validation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Build schemas and run exercises (MySQL 8.4.9)
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.4.9
+        env:
+          MYSQL_ROOT_PASSWORD: ci-root-password
+          MYSQL_DATABASE: escoladb
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --host=127.0.0.1 --user=root --password=ci-root-password --silent"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
+    env:
+      MYSQL_ROOT_PASSWORD: ci-root-password
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Load EscolaDB schema and sample data
+        env:
+          MYSQL_CONTAINER_ID: ${{ job.services.mysql.id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          files=(
+            'escoladb.sql/escoladb_alunos.sql'
+            'escoladb.sql/escoladb_responsaveis.sql'
+            'escoladb.sql/escoladb_professores.sql'
+            'escoladb.sql/escoladb_funcionarios.sql'
+            'escoladb.sql/escoladb_anos_letivos.sql'
+            'escoladb.sql/escoladb_disciplinas.sql'
+            'escoladb.sql/escoladb_turmas.sql'
+            'escoladb.sql/escoladb_aluno_responsavel.sql'
+            'escoladb.sql/escoladb_matriculas.sql'
+            'escoladb.sql/escoladb_turma_disciplina.sql'
+            'escoladb.sql/escoladb_mensalidades.sql'
+            'escoladb.sql/escoladb_matricula_disciplina.sql'
+            'escoladb.sql/escoladb_pagamentos.sql'
+            'escoladb.sql/escoladb_frequencias.sql'
+            'escoladb.sql/escoladb_notas.sql'
+          )
+          for file in "${files[@]}"; do
+            echo "Loading $file"
+            docker exec -i -e MYSQL_PWD="$MYSQL_ROOT_PASSWORD" "$MYSQL_CONTAINER_ID" \
+              mysql --user=root --default-character-set=utf8mb4 escoladb < "$file"
+          done
+
+      - name: Load commerce schema and sample data
+        env:
+          MYSQL_CONTAINER_ID: ${{ job.services.mysql.id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker exec -e MYSQL_PWD="$MYSQL_ROOT_PASSWORD" "$MYSQL_CONTAINER_ID" \
+            mysql --user=root --execute="CREATE DATABASE comercio_db CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;"
+          files=(
+            'Comercio_db/comercio_db.sql/comercio_db_categorias.sql'
+            'Comercio_db/comercio_db.sql/comercio_db_clientes.sql'
+            'Comercio_db/comercio_db.sql/comercio_db_produtos.sql'
+            'Comercio_db/comercio_db.sql/comercio_db_vendas.sql'
+            'Comercio_db/comercio_db.sql/comercio_db_itens_venda.sql'
+          )
+          for file in "${files[@]}"; do
+            echo "Loading $file"
+            docker exec -i -e MYSQL_PWD="$MYSQL_ROOT_PASSWORD" "$MYSQL_CONTAINER_ID" \
+              mysql --user=root --default-character-set=utf8mb4 comercio_db < "$file"
+          done
+
+      - name: Run EscolaDB exercise queries
+        env:
+          MYSQL_CONTAINER_ID: ${{ job.services.mysql.id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker exec -i -e MYSQL_PWD="$MYSQL_ROOT_PASSWORD" "$MYSQL_CONTAINER_ID" \
+            mysql --user=root --default-character-set=utf8mb4 < 'escoladb.sql/listas _de _exercícios _query.sql'
+
+      - name: Verify table and foreign-key counts
+        env:
+          MYSQL_CONTAINER_ID: ${{ job.services.mysql.id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          count_objects() {
+            local query="$1"
+            docker exec -e MYSQL_PWD="$MYSQL_ROOT_PASSWORD" "$MYSQL_CONTAINER_ID" \
+              mysql --user=root --batch --skip-column-names --execute="$query" information_schema
+          }
+
+          escola_tables=$(count_objects "SELECT COUNT(*) FROM tables WHERE table_schema='escoladb' AND table_type='BASE TABLE'")
+          escola_fks=$(count_objects "SELECT COUNT(*) FROM table_constraints WHERE constraint_schema='escoladb' AND constraint_type='FOREIGN KEY'")
+          comercio_tables=$(count_objects "SELECT COUNT(*) FROM tables WHERE table_schema='comercio_db' AND table_type='BASE TABLE'")
+          comercio_fks=$(count_objects "SELECT COUNT(*) FROM table_constraints WHERE constraint_schema='comercio_db' AND constraint_type='FOREIGN KEY'")
+
+          test "$escola_tables" = 15
+          test "$escola_fks" = 14
+          test "$comercio_tables" = 5
+          test "$comercio_fks" = 4
+          printf 'EscolaDB: %s tables, %s foreign keys\n' "$escola_tables" "$escola_fks"
+          printf 'comercio_db: %s tables, %s foreign keys\n' "$comercio_tables" "$comercio_fks"

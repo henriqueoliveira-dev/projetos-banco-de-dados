@@ -2,7 +2,9 @@
 
 ![MySQL](https://img.shields.io/badge/MySQL-8.4.9-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
 ![Database](https://img.shields.io/badge/Database-Relational-blue?style=for-the-badge)
-![Status](https://img.shields.io/badge/Status-Em%20desenvolvimento-orange?style=for-the-badge)
+[![MySQL CI](https://github.com/henriqueoliveira-dev/projetos-banco-de-dados/actions/workflows/mysql-validation.yml/badge.svg?branch=main)](https://github.com/henriqueoliveira-dev/projetos-banco-de-dados/actions/workflows/mysql-validation.yml)
+
+O badge **MySQL CI** mostra o resultado da validação automatizada dos dois esquemas SQL e das consultas do EscolaDB em um MySQL 8.4.9 temporário. Ele não monitora disponibilidade de um banco de produção.
 
 ## Sobre o projeto
 
