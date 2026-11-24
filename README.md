@@ -1,11 +1,5 @@
 # EscolaDB — Sistema de Gerenciamento Escolar
 
-![MySQL](https://img.shields.io/badge/MySQL-8.4.9-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
-![Database](https://img.shields.io/badge/Database-Relational-blue?style=for-the-badge)
-[![MySQL CI](https://github.com/henriqueoliveira-dev/projetos-banco-de-dados/actions/workflows/mysql-validation.yml/badge.svg?branch=main)](https://github.com/henriqueoliveira-dev/projetos-banco-de-dados/actions/workflows/mysql-validation.yml)
-
-O badge **MySQL CI** mostra o resultado da validação automatizada dos dois esquemas SQL e das consultas do EscolaDB em um MySQL 8.4.9 temporário. Ele não monitora disponibilidade de um banco de produção.
-
 ## Sobre o projeto
 
 O **EscolaDB** é um projeto educacional de banco de dados relacional em MySQL, destinado a modelar informações acadêmicas, administrativas e financeiras de uma instituição de ensino. O esquema contempla alunos, responsáveis, professores, funcionários, turmas, disciplinas, matrículas, notas, frequências e pagamentos.
@@ -59,12 +53,6 @@ O esquema contém **15 tabelas**, **81 colunas** e **14 chaves estrangeiras**.
 | `pagamentos` | Pagamentos associados às mensalidades |
 
 O modelo utiliza chaves primárias e estrangeiras, restrições `UNIQUE` e `CHECK`, tabelas associativas para relações muitos-para-muitos e o mecanismo InnoDB.
-
-## Diagrama entidade-relacionamento
-
-![Diagrama ER do EscolaDB](EscolaDB_Diagrama_ER.png)
-
-O arquivo está na raiz do repositório: [`EscolaDB_Diagrama_ER.png`](EscolaDB_Diagrama_ER.png).
 
 ## Scripts e carga do banco
 
