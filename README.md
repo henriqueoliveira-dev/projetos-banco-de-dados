@@ -1,40 +1,61 @@
 # 🏫 EscolaDB — Sistema de Gerenciamento Escolar
 
-![MySQL](https://img.shields.io/badge/MySQL-8.4.9-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
-![Database](https://img.shields.io/badge/Database-Relational-blue?style=for-the-badge)
-![Status](https://img.shields.io/badge/Status-Em%20desenvolvimento-orange?style=for-the-badge)
-
 ## 📌 Sobre o projeto
 
-O **EscolaDB** é um projeto de banco de dados relacional desenvolvido com MySQL, com o objetivo de estruturar e organizar informações de uma instituição de ensino.
+O **EscolaDB** é um projeto de banco de dados relacional desenvolvido com **MySQL**, criado para representar a estrutura de dados de uma instituição de ensino.
 
-O banco foi projetado para representar diferentes áreas do ambiente escolar, incluindo alunos, responsáveis, professores, funcionários, turmas, disciplinas, matrículas, notas, frequências e controle financeiro.
+O projeto foi desenvolvido com foco na aplicação prática de conceitos de **modelagem de dados, relacionamentos entre entidades, integridade referencial e consultas SQL**.
 
-O projeto tem como finalidade aplicar conceitos de modelagem de dados, integridade referencial e consultas SQL, simulando a estrutura de dados de um sistema de gerenciamento escolar.
+A estrutura contempla diferentes áreas de uma instituição escolar, incluindo:
+
+- 👨‍🎓 Alunos
+- 👨‍👩‍👧 Responsáveis
+- 👨‍🏫 Professores
+- 👷 Funcionários
+- 🏫 Turmas
+- 📚 Disciplinas
+- 📝 Matrículas
+- 📊 Notas
+- 📅 Frequências
+- 💰 Mensalidades
+- 💳 Pagamentos
+
+O objetivo é simular uma estrutura de banco de dados utilizada por um sistema de gerenciamento escolar, permitindo trabalhar com informações acadêmicas, administrativas e financeiras.
+
+---
 
 ## 🎯 Objetivos
 
-- Desenvolver uma estrutura de banco de dados relacional.
-- Organizar informações acadêmicas e administrativas.
-- Implementar relacionamentos entre diferentes entidades.
-- Aplicar chaves primárias e estrangeiras.
-- Utilizar restrições para garantir a integridade dos dados.
-- Desenvolver consultas SQL para extração e análise de informações.
+O projeto tem como principais objetivos:
+
+- Desenvolver um banco de dados relacional estruturado.
+- Aplicar conceitos de modelagem de dados.
+- Criar relacionamentos entre diferentes entidades.
+- Utilizar chaves primárias e estrangeiras.
+- Aplicar restrições para garantir a integridade dos dados.
+- Praticar comandos SQL para criação, manipulação e consulta.
+- Desenvolver consultas para análise das informações.
+- Organizar um projeto de banco de dados utilizando boas práticas de versionamento.
+
+---
 
 ## 🛠️ Tecnologias utilizadas
 
 | Tecnologia | Utilização |
 |---|---|
-| MySQL 8.4.9 | Sistema gerenciador de banco de dados |
-| MySQL Workbench | Administração e execução de consultas SQL |
-| SQL | Criação, manipulação e consulta de dados |
-| Git / GitHub | Versionamento e documentação do projeto |
+| **MySQL 8.4.9** | Sistema gerenciador de banco de dados |
+| **MySQL Workbench** | Desenvolvimento e administração do banco |
+| **SQL** | Criação, manipulação e consulta dos dados |
+| **Git** | Controle de versão |
+| **GitHub** | Versionamento e documentação |
 
-## 🗂️ Estrutura do banco de dados
+---
 
-O EscolaDB possui **15 tabelas**, organizadas para representar diferentes áreas de uma instituição escolar.
+## 🗂️ Estrutura do banco
 
-### 1. Pessoas e relacionamentos
+O **EscolaDB** possui **15 tabelas**, organizadas de acordo com as principais áreas do sistema.
+
+### 👥 Pessoas e relacionamentos
 
 | Tabela | Descrição |
 |---|---|
@@ -44,7 +65,7 @@ O EscolaDB possui **15 tabelas**, organizadas para representar diferentes áreas
 | `professores` | Cadastro dos professores |
 | `funcionarios` | Cadastro dos funcionários |
 
-### 2. Estrutura acadêmica
+### 🏫 Estrutura acadêmica
 
 | Tabela | Descrição |
 |---|---|
@@ -53,7 +74,7 @@ O EscolaDB possui **15 tabelas**, organizadas para representar diferentes áreas
 | `disciplinas` | Cadastro das disciplinas |
 | `turma_disciplina` | Associação entre turmas, disciplinas e professores |
 
-### 3. Matrículas e aprendizagem
+### 📚 Matrículas e aprendizagem
 
 | Tabela | Descrição |
 |---|---|
@@ -62,48 +83,75 @@ O EscolaDB possui **15 tabelas**, organizadas para representar diferentes áreas
 | `notas` | Registro das avaliações e notas |
 | `frequencias` | Controle de presença e faltas |
 
-### 4. Financeiro
+### 💰 Controle financeiro
 
 | Tabela | Descrição |
 |---|---|
 | `mensalidades` | Controle das mensalidades |
 | `pagamentos` | Registro dos pagamentos realizados |
 
+---
+
 ## 🔗 Modelo relacional
 
-O banco utiliza relacionamentos entre entidades por meio de chaves primárias (PK) e chaves estrangeiras (FK).
+O banco foi estruturado utilizando **chaves primárias (PK)** e **chaves estrangeiras (FK)** para estabelecer os relacionamentos entre as entidades.
 
-O modelo contempla relacionamentos de um para muitos (1:N) e muitos para muitos (N:N), utilizando tabelas associativas quando necessário.
+Foram utilizados relacionamentos:
 
-O relacionamento entre alunos e responsáveis, por exemplo, é representado pela tabela `aluno_responsavel`.
+- **1:N — Um para muitos**
+- **N:N — Muitos para muitos**
 
-A associação entre turmas, disciplinas e professores é realizada pela tabela `turma_disciplina`.
+Nos relacionamentos muitos para muitos, foram utilizadas **tabelas associativas** para organizar as relações entre as entidades.
 
-### Diagrama entidade-relacionamento (DER)
+Exemplos:
 
-O diagrama apresenta a estrutura das tabelas e seus relacionamentos.
+```text
+alunos
+   │
+   └── aluno_responsavel ── responsáveis
 
-**Arquivo:** `docs/EscolaDB_Diagrama_ER.png`
+turmas
+   │
+   └── turma_disciplina ── disciplinas
+              │
+              └── professores
 
-> Após adicionar o arquivo à pasta `docs`, ele poderá ser exibido aqui:
+matriculas
+   │
+   └── matricula_disciplina ── disciplinas
+```
 
-![Diagrama ER do EscolaDB](docs/EscolaDB_Diagrama_ER.png)
+A documentação visual do modelo e os arquivos relacionados ao banco estão organizados dentro das pastas correspondentes do projeto.
 
-## ⚙️ Recursos SQL aplicados
+---
 
-Durante o desenvolvimento e os exercícios do projeto, foram trabalhados os seguintes recursos:
+## ⚙️ Conceitos SQL aplicados
 
-- `CREATE DATABASE` e `CREATE TABLE`
+Durante o desenvolvimento foram utilizados diferentes recursos da linguagem SQL, incluindo:
+
+### Estrutura do banco
+
+- `CREATE DATABASE`
+- `CREATE TABLE`
 - `ALTER TABLE`
+
+### Integridade
+
 - `PRIMARY KEY`
 - `FOREIGN KEY`
 - `UNIQUE`
 - `CHECK`
 - `DEFAULT`
+
+### Manipulação de dados
+
 - `INSERT INTO`
 - `SELECT`
 - `WHERE`
 - `ORDER BY`
+
+### Consultas e análises
+
 - `INNER JOIN`
 - `COUNT()`
 - `SUM()`
@@ -112,41 +160,82 @@ Durante o desenvolvimento e os exercícios do projeto, foram trabalhados os segu
 - `HAVING`
 - `ROUND()`
 
-## 🛡️ Integridade e organização dos dados
+---
 
-O projeto utiliza mecanismos de integridade do MySQL, incluindo:
+## 🛡️ Integridade dos dados
 
-- Chaves primárias para identificação dos registros.
-- Chaves estrangeiras para estabelecer relacionamentos.
-- Restrições `UNIQUE` para evitar duplicidade em campos específicos.
-- Restrições `CHECK` para validação de valores.
-- Engine InnoDB para suporte a transações e integridade referencial.
+O projeto utiliza recursos do MySQL para manter a consistência das informações armazenadas.
+
+Entre eles:
+
+- **Primary Keys** para identificação dos registros.
+- **Foreign Keys** para relacionamentos entre tabelas.
+- **UNIQUE** para evitar duplicidade em campos específicos.
+- **CHECK** para validação de determinados valores.
+- **DEFAULT** para definição de valores padrão.
+- **InnoDB** para suporte a transações e integridade referencial.
+
+---
 
 ## 📊 Informações técnicas
 
 | Característica | Informação |
 |---|---|
-| Nome do banco | EscolaDB |
-| SGBD | MySQL |
-| Versão utilizada | 8.4.9 |
-| Quantidade de tabelas | 15 |
-| Quantidade de colunas | 81 |
-| Referências de chaves estrangeiras | 16 |
-
-## 🚀 Próximas etapas
-
-- [ ] Finalizar a documentação técnica do banco.
-- [ ] Organizar os scripts SQL de criação das tabelas.
-- [ ] Documentar os dados de teste.
-- [ ] Ampliar a coleção de consultas SQL.
-- [ ] Desenvolver consultas para relatórios acadêmicos e financeiros.
-- [ ] Continuar aprimorando o modelo relacional.
-
-## 📚 Finalidade educacional
-
-Este projeto foi desenvolvido com finalidade educacional, como parte do processo de estudo e prática de banco de dados relacionais e linguagem SQL.
+| **Nome do banco** | EscolaDB |
+| **SGBD** | MySQL |
+| **Versão** | 8.4.9 |
+| **Tabelas** | 15 |
+| **Colunas** | 81 |
+| **Chaves estrangeiras** | 16 |
 
 ---
 
-**EscolaDB** — Projeto de banco de dados relacional desenvolvido com MySQL.
+## 📁 Organização do projeto
 
+A estrutura do projeto foi organizada para separar os scripts, documentação e arquivos relacionados ao banco de dados.
+
+```text
+EscolaDB/
+│
+├── docs/
+│   └── arquivos de documentação e modelagem
+│
+├── scripts/
+│   └── scripts SQL
+│
+└── README.md
+```
+
+> A estrutura acima representa a organização conceitual do projeto. Os arquivos disponíveis no repositório podem variar conforme a evolução do desenvolvimento.
+
+---
+
+## 🚀 Próximas etapas
+
+- [ ] Finalizar a documentação técnica.
+- [ ] Organizar os scripts SQL de criação do banco.
+- [ ] Documentar os dados utilizados nos testes.
+- [ ] Ampliar a coleção de consultas SQL.
+- [ ] Criar consultas para relatórios acadêmicos.
+- [ ] Criar consultas para análises financeiras.
+- [ ] Continuar aprimorando o modelo relacional.
+
+---
+
+## 📚 Finalidade do projeto
+
+O **EscolaDB** foi desenvolvido com finalidade educacional e prática, como parte do processo de aprendizado e desenvolvimento de conhecimentos em **bancos de dados relacionais e SQL**.
+
+O projeto busca demonstrar a aplicação prática de conceitos fundamentais de banco de dados por meio da construção de uma estrutura que simula um cenário real de gerenciamento escolar.
+
+---
+
+## 👨‍💻 Autor
+
+**Henrique Oliveira**
+
+Estudante de **Análise e Desenvolvimento de Sistemas**, com foco em desenvolvimento utilizando **Python, backend, APIs, bancos de dados e automação de processos**.
+
+---
+
+⭐ Projeto desenvolvido para estudo, prática e construção de portfólio em desenvolvimento de software e banco de dados.
