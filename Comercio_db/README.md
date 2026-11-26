@@ -51,12 +51,6 @@ O banco possui quatro relacionamentos principais:
 
 Os relacionamentos são implementados por meio de chaves estrangeiras (`FOREIGN KEY`).
 
-## 🗺️ Diagrama Entidade-Relacionamento (DER)
-
-O diagrama abaixo representa a estrutura do banco, incluindo tabelas, colunas, chaves primárias, chaves estrangeiras e relacionamentos.
-
-![Diagrama ER do comercio_db](docs/diagrama_ER.png)
-
 ## 📁 Organização do projeto
 
 ```text
