@@ -1,0 +1,209 @@
+/*
+  Banco_Empresa — script de estrutura derivado do modelo do BACPAC.
+  Somente DDL: nenhum registro do pacote original está incluído.
+  Revisão: triggers de validação e histórico foram ajustadas para operações multi-linha.
+  Origem: Microsoft.Data.Tools.Schema.Sql.Sql170DatabaseSchemaProvider.
+  Executar em SQL Server via SSMS ou sqlcmd; GO é separador de lote do cliente.
+*/
+SET ANSI_NULLS ON;
+SET QUOTED_IDENTIFIER ON;
+GO
+
+CREATE TABLE [dbo].[ALUNO] (
+    [IDALUNO] int IDENTITY(1,1) NOT NULL,
+    [NOME] varchar(30) NOT NULL,
+    [SEXO] char(1) NOT NULL,
+    [NASCIMENTO] date NOT NULL,
+    [EMAIL] varchar(30)
+);
+GO
+
+CREATE TABLE [dbo].[EMPREGADO] (
+    [IDEMP] int NOT NULL,
+    [NOME] varchar(30),
+    [SALARIO] money,
+    [IDGERENTE] int
+);
+GO
+
+CREATE TABLE [dbo].[ENDERECO] (
+    [IDENDERECO] int IDENTITY(1,1) NOT NULL,
+    [BAIRRO] varchar(30),
+    [UF] char(2) NOT NULL,
+    [ID_ALUNO] int
+);
+GO
+
+CREATE TABLE [dbo].[HIST_SALARIO] (
+    [IDEMPREGADO] int,
+    [ANTIGOSAL] money,
+    [NOVOSAL] money,
+    [DATA] datetime
+);
+GO
+
+CREATE TABLE [dbo].[HISTORICO] (
+    [IDOPERACAO] int IDENTITY(1,1) NOT NULL,
+    [PRODUTO] varchar(50) NOT NULL,
+    [CATEGORIA] varchar(30) NOT NULL,
+    [PRECOANTIGO] numeric(10,2) NOT NULL,
+    [PRECONOVO] numeric(10,2) NOT NULL,
+    [DATA] datetime,
+    [USUARIO] varchar(30),
+    [MENSAGEM] varchar(100)
+);
+GO
+
+CREATE TABLE [dbo].[LANCAMENTO_CONTABIL] (
+    [CONTA] int,
+    [VALOR] int,
+    [DEB_CRED] char(1)
+);
+GO
+
+CREATE TABLE [dbo].[MAQUINAS] (
+    [MAQUINA] varchar(20),
+    [DIA] int,
+    [QTD] numeric(10,2)
+);
+GO
+
+CREATE TABLE [dbo].[PRODUTOS] (
+    [IDPRODUTO] int IDENTITY(1,1) NOT NULL,
+    [NOME] varchar(50) NOT NULL,
+    [CATEGORIA] varchar(30) NOT NULL,
+    [PRECO] numeric(10,2) NOT NULL
+);
+GO
+
+CREATE TABLE [dbo].[SALARIO_RANGE] (
+    [MINSAL] money,
+    [MAXSAL] money
+);
+GO
+
+CREATE TABLE [dbo].[TB_EMPRESA] (
+    [ID] int,
+    [NOME] varchar(50)
+);
+GO
+
+CREATE TABLE [dbo].[TB_MKT] (
+    [id] int,
+    [nome] varchar(50)
+);
+GO
+
+CREATE TABLE [dbo].[TB_VENDAS] (
+    [id] int,
+    [nome] varchar(50)
+);
+GO
+
+CREATE TABLE [dbo].[TELEFONE] (
+    [IDTELEFONE] int IDENTITY(1,1) NOT NULL,
+    [TIPO] char(3) NOT NULL,
+    [NUMERO] varchar(10) NOT NULL,
+    [ID_ALUNO] int
+);
+GO
+
+ALTER TABLE [dbo].[ALUNO] ADD CONSTRAINT [PK__ALUNO__7E25E18CCB933D7B] PRIMARY KEY ([IDALUNO]);
+GO
+
+ALTER TABLE [dbo].[ENDERECO] ADD CONSTRAINT [PK__ENDERECO__D695292835D0114B] PRIMARY KEY ([IDENDERECO]);
+GO
+
+ALTER TABLE [dbo].[TELEFONE] ADD CONSTRAINT [PK__TELEFONE__E064D0D4797866FB] PRIMARY KEY ([IDTELEFONE]);
+GO
+
+ALTER TABLE [dbo].[PRODUTOS] ADD CONSTRAINT [PK__PRODUTOS__ED0C593334E1C277] PRIMARY KEY ([IDPRODUTO]);
+GO
+
+ALTER TABLE [dbo].[HISTORICO] ADD CONSTRAINT [PK__HISTORIC__13DF589462C252EF] PRIMARY KEY ([IDOPERACAO]);
+GO
+
+ALTER TABLE [dbo].[EMPREGADO] ADD CONSTRAINT [PK__EMPREGAD__9228FC31CD155AA3] PRIMARY KEY ([IDEMP]);
+GO
+
+ALTER TABLE [dbo].[ALUNO] ADD CONSTRAINT [UQ__ALUNO__161CF7246EE927F4] UNIQUE ([EMAIL]);
+GO
+
+ALTER TABLE [dbo].[ENDERECO] ADD CONSTRAINT [UQ__ENDERECO__5896AB6EE13921D6] UNIQUE ([ID_ALUNO]);
+GO
+
+ALTER TABLE [dbo].[ENDERECO] WITH CHECK ADD CONSTRAINT [CK__ENDERECO__UF__6477ECF3] CHECK ([UF]='MG' OR [UF]='SP' OR [UF]='RJ');
+GO
+
+ALTER TABLE [dbo].[TELEFONE] WITH CHECK ADD CONSTRAINT [CK__TELEFONE__TIPO__6A30C649] CHECK ([TIPO]='CEL' OR [TIPO]='COM' OR [TIPO]='RES');
+GO
+
+ALTER TABLE [dbo].[ALUNO] WITH CHECK ADD CONSTRAINT [CK_SEXO] CHECK ([SEXO]='F' OR [SEXO]='M');
+GO
+
+ALTER TABLE [dbo].[ENDERECO] WITH CHECK ADD CONSTRAINT [FK_ENDERECO_ALUNO] FOREIGN KEY ([ID_ALUNO]) REFERENCES [dbo].[ALUNO] ([IDALUNO]);
+GO
+
+ALTER TABLE [dbo].[EMPREGADO] WITH CHECK ADD CONSTRAINT [FK_GERENTE] FOREIGN KEY ([IDGERENTE]) REFERENCES [dbo].[EMPREGADO] ([IDEMP]);
+GO
+
+/* Corrigido: valida todas as linhas afetadas em INSERT/UPDATE. */
+CREATE TRIGGER [dbo].[TG_RANGE]
+ON [dbo].[EMPREGADO]
+AFTER INSERT, UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    DECLARE @MINSAL money, @MAXSAL money;
+    SELECT @MINSAL = [MINSAL], @MAXSAL = [MAXSAL]
+    FROM [dbo].[SALARIO_RANGE];
+
+    IF EXISTS (SELECT 1 FROM inserted AS i WHERE i.[SALARIO] < @MINSAL)
+    BEGIN
+        RAISERROR('SALARIO MENOR QUE O PISO', 16, 1);
+        ROLLBACK TRANSACTION;
+        RETURN;
+    END;
+
+    IF EXISTS (SELECT 1 FROM inserted AS i WHERE i.[SALARIO] > @MAXSAL)
+    BEGIN
+        RAISERROR('SALARIO MAIOR QUE O TETO', 16, 1);
+        ROLLBACK TRANSACTION;
+        RETURN;
+    END;
+END;
+GO
+
+CREATE TRIGGER [dbo].[TG_SALARIO]
+ON [dbo].[EMPREGADO]
+AFTER UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    IF UPDATE([SALARIO])
+    BEGIN
+        INSERT INTO [dbo].[HIST_SALARIO]
+            ([IDEMPREGADO], [ANTIGOSAL], [NOVOSAL], [DATA])
+        SELECT d.[IDEMP], d.[SALARIO], i.[SALARIO], GETDATE()
+        FROM deleted AS d
+        INNER JOIN inserted AS i ON i.[IDEMP] = d.[IDEMP];
+    END;
+END;
+GO
+
+/* Corrigido: registra uma linha de histórico por produto afetado. */
+CREATE TRIGGER [dbo].[TRG_ATUALIZA_PRECO]
+ON [dbo].[PRODUTOS]
+AFTER UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    INSERT INTO [dbo].[HISTORICO]
+        ([PRODUTO], [CATEGORIA], [PRECOANTIGO], [PRECONOVO], [DATA], [USUARIO], [MENSAGEM])
+    SELECT i.[NOME], i.[CATEGORIA], d.[PRECO], i.[PRECO], GETDATE(), SUSER_NAME(),
+           'VALOR INSERIDO PELA TRIGGER TRG_ATUALIZA_PRECO'
+    FROM inserted AS i
+    INNER JOIN deleted AS d ON d.[IDPRODUTO] = i.[IDPRODUTO];
+    PRINT 'TRIGGER EXECUTADA COM SUCESSO';
+END;
+GO

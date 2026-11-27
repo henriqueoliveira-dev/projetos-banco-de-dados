@@ -1,0 +1,26 @@
+# Pacotes e backups de banco de dados (podem conter dados pessoais)
+*.bacpac
+*.dacpac
+*.bak
+*.trn
+*.mdf
+*.ldf
+*.dump
+*.backup
+
+# Segredos e configurações locais
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.pfx
+*.p12
+
+# Temporários e arquivos do sistema
+*.log
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~

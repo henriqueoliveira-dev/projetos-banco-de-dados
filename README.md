@@ -1,4 +1,22 @@
-# 🏫 EscolaDB — Sistema de Gerenciamento Escolar
+# Portfólio de Estudos em Bancos de Dados
+
+Este repositório reúne estudos e projetos de bancos de dados relacionais, com foco em modelagem, integridade e SQL. Os arquivos PostgreSQL e SQL Server adicionados neste portfólio contêm **somente estrutura**, sem linhas de dados.
+
+## Organização e evolução
+
+Os materiais estão separados por tecnologia e por projeto. A evolução documentada nesta revisão foi validar os esquemas recebidos, preservar as regras existentes, remover os registros dos anexos antes de preparar cópias publicáveis e corrigir triggers SQL Server que não tratavam corretamente alterações em múltiplas linhas. Os estudos seguem em evolução; pontos que dependem de regra de negócio estão registrados nos READMEs.
+
+## Tecnologias e projetos
+
+- [PostgreSQL](postgresql/README.md) — esquema do projeto `data_science`.
+- [SQL Server](sql-server/README.md) — esquema derivado do pacote `Banco_Empresa.bacpac`; o pacote original não é publicado.
+- **MySQL (conteúdo preexistente):** [EscolaDB](#projeto-escoladb--mysql) e [Comercio_db](Comercio_db/README.md) permanecem nos caminhos atuais e fora desta reorganização.
+
+> Os dados de exemplo dos anexos PostgreSQL e SQL Server foram excluídos das versões publicáveis por conterem informações pessoais aparentes. O BACPAC original não está no repositório.
+
+---
+
+## Projeto EscolaDB — MySQL
 
 ## 📌 Sobre o projeto
 
